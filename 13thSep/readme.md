@@ -55,8 +55,7 @@ median_freq = np.median(frequencies)
 class_weights = {cls: median_freq / count for cls, count in enumerate(frequencies)}
 ```
 
-```
 ![alt text](image.png)
-```
+
 
 ![alt text](image-1.png)

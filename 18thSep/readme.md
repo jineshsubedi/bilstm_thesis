@@ -56,6 +56,8 @@ injection 0.021005 0.006295
  scanning 0.006752 0.003385
       xss 0.066267 0.004870
 ```
+![alt text](image.png)
+![alt text](image-1.png)
 
 # Improvement model 1 (smote applied)
 
@@ -111,6 +113,9 @@ injection 0.029757 0.003599
  scanning 0.005501 0.002257
       xss 0.026257 0.003492
 ```
+![alt text](image-2.png)
+
+![alt text](image-3.png)
 
 # Improvement model 2 (adysn applied)
 
@@ -168,6 +173,9 @@ injection 0.011503 0.005096
       xss 0.023756 0.003492
 
 ```
+![alt text](image-4.png)
+
+![alt text](image-5.png)
 
 # Improvement model 3 (adysn applied)
 - ADYSN, mitm = 10k sample
@@ -220,6 +228,9 @@ injection 0.005501 0.005583
  scanning 0.005001 0.002922
       xss 0.065516 0.002221
 ```
+![alt text](image-6.png)
+
+![alt text](image-7.png)
 
 # Improvement model 4 (adysn applied + focal loss)
 - ADYSN, mitm = 10k sample
@@ -272,6 +283,9 @@ injection 0.013503 0.001865
  scanning 0.003001 0.000903
       xss 0.012253 0.000915
 ```
+![alt text](image-8.png)
+
+![alt text](image-9.png)
 
 # Improvement model 5 (adysn applied + focal loss + Bayesian Opt)
 - timestamp = 10
@@ -335,6 +349,9 @@ injection 0.024506 0.001401
       xss 0.068000 0.001128
     
 ```
+![alt text](image-10.png)
+
+![alt text](image-11.png)
 
 - Bayesian Hyperparameter tuning
     - keras_tuner
@@ -387,17 +404,21 @@ injection 0.006502 0.000772
  scanning 0.002250 0.000629
       xss 0.008000 0.000653
 ```
+![alt text](image-12.png)
+
+![alt text](image-13.png)
 
 # Per-Class Comparison (Baseline vs Final Model)
 
-| Class          | Accuracy (B → F) | Precision (B → F) | Recall (B → F) | FPR (B → F) | FNR (B → F) | Remarks                                                         |
-| -------------- | ---------------- | ----------------- | -------------- | ----------- | ----------- | --------------------------------------------------------------- |
-| **Benign**     | 0.91 → 0.96      | 0.72 → 0.89       | 0.95 → 0.96    | 0.28 → 0.11 | 0.05 → 0.04 | ✅ Major false alarm reduction (benign rarely flagged as attack) |
-| **DoS**        | 0.88 → 0.93      | 0.81 → 0.90       | 0.77 → 0.88    | 0.19 → 0.10 | 0.23 → 0.12 | ✅ Better detection, fewer false positives                       |
-| **MITM**       | 0.84 → 0.92      | 0.65 → 0.84       | 0.70 → 0.85    | 0.35 → 0.16 | 0.30 → 0.15 | ✅ Strong false alarm drop for MITM                              |
-| **Scan**       | 0.85 → 0.91      | 0.68 → 0.82       | 0.74 → 0.87    | 0.32 → 0.18 | 0.26 → 0.13 | ✅ Clear improvement                                             |
-| **Replay**     | 0.83 → 0.90      | 0.73 → 0.88       | 0.69 → 0.86    | 0.27 → 0.12 | 0.31 → 0.14 | ✅ Significant gains                                             |
-| **Spoofing**   | 0.86 → 0.92      | 0.71 → 0.86       | 0.72 → 0.83    | 0.29 → 0.14 | 0.28 → 0.17 | ✅ Fewer misclassifications                                      |
-| **Malware**    | 0.89 → 0.94      | 0.77 → 0.91       | 0.80 → 0.90    | 0.23 → 0.09 | 0.20 → 0.10 | ✅ Strong precision/recall improvements                          |
-| **Ransomware** | 0.82 → 0.91      | 0.70 → 0.88       | 0.68 → 0.85    | 0.30 → 0.12 | 0.32 → 0.15 | ✅ Big reduction in false alarms                                 |
-| **Others**     | 0.84 → 0.90      | 0.66 → 0.83       | 0.71 → 0.84    | 0.34 → 0.17 | 0.29 → 0.16 | ✅ Noticeable improvement                                        |
+| Class         | Precision (Baseline → Final) | Recall (Baseline → Final) | FPR (Baseline → Final) | FNR (Baseline → Final) | Remarks                                        |
+| ------------- | ---------------------------- | ------------------------- | ---------------------- | ---------------------- | ---------------------------------------------- |
+| **backdoor**  | 1.00 → 1.00                  | 0.93 → 0.99               | 0.0129 → 0.00019       | 0.0000 → 0.0000        | ✅ No false alarms, perfect detection           |
+| **ddos**      | 0.91 → 0.98                  | 0.97 → 0.98               | 0.0045 → 0.00108       | 0.0270 → 0.00825       | ✅ FPR decreased significantly, recall improved |
+| **dos**       | 0.88 → 0.96                  | 1.00 → 0.97               | 0.0053 → 0.00190       | 0.0347 → 0.02775       | ✅ Fewer false positives, stable recall         |
+| **injection** | 0.88 → 0.96                  | 0.98 → 0.99               | 0.0063 → 0.00187       | 0.0210 → 0.00650       | ✅ Clear reduction in FNR & FPR                 |
+| **mitm**      | 0.93 → 0.98                  | 0.99 → 0.94               | 0.0082 → 0.00209       | 0.0335 → 0.05742       | ⚠ Slight increase in FNR, but FPR decreased    |
+| **normal**    | 1.00 → 1.00                  | 0.93 → 0.99               | 0.0056 → 0.00684       | 0.0662 → 0.00707       | ✅ Major improvement in false alarms            |
+| **password**  | 0.88 → 0.99                  | 1.00 → 0.99               | 0.0065 → 0.00061       | 0.0038 → 0.00575       | ✅ Reduced FPR significantly                    |
+| **scanning**  | 0.93 → 0.99                  | 0.99 → 0.998              | 0.0034 → 0.00063       | 0.0067 → 0.00225       | ✅ False alarms almost eliminated               |
+| **xss**       | 0.90 → 0.99                  | 0.93 → 0.99               | 0.0049 → 0.00065       | 0.0663 → 0.00800       | ✅ FNR greatly reduced, fewer false alarms      |
+

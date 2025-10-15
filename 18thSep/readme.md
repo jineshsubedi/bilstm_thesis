@@ -1,5 +1,33 @@
 # class wise comaprision
 
+# data set description:
+All dataset files were combined in the original class distribution.:
+type
+scanning      7140161
+ddos          6165008
+dos           3375328
+xss           2108944
+password      1718568
+normal         796380
+backdoor       508116
+injection      452659
+ransomware      72805
+mitm             1052
+Name: count, dtype: int64
+
+Final sampled dataset shape: (341043, 47)
+Class distribution:
+ type
+normal       200000
+backdoor      20000
+ddos          20000
+injection     20000
+dos           20000
+scanning      20000
+password      20000
+xss           20000
+mitm           1043
+
 # Baseline Model:
 
 ## Approach:
@@ -26,7 +54,6 @@ y_val_seq distribution: Counter({np.int64(5): 47868, np.int64(1): 3310, np.int64
 - training:
     - loss='categorical_crossentropy'
     - class_weights by median frequence
-    - shuffle=False
     - batch_size=64
 ```
 precision    recall  f1-score   support
@@ -84,7 +111,6 @@ y_val_seq distribution: Counter({np.int64(5): 47806, np.int64(1): 3297, np.int64
 - training:
     - loss='categorical_crossentropy'
     - class_weights by median frequence
-    - shuffle=False
     - batch_size=64
 ```precision    recall  f1-score   support
 
@@ -142,7 +168,6 @@ y_val_seq distribution: Counter({np.int64(5): 47848, np.int64(0): 3319, np.int64
 - training:
     - loss='categorical_crossentropy'
     - class_weights by median frequence
-    - shuffle=False
     - batch_size=64
 ```
 precision    recall  f1-score   support
@@ -182,7 +207,6 @@ injection 0.011503 0.005096
 - training:
     - loss='categorical_crossentropy'
     - class_weights by median frequence
-    - shuffle=False
     - batch_size=64
 
 ```
@@ -237,7 +261,6 @@ injection 0.005501 0.005583
 - training:
     - loss=focal_loss(gamma=2.0, alpha=0.25)
     - class_weights by median frequence
-    - shuffle=False
     - batch_size=64
 
 ```
@@ -317,7 +340,6 @@ y_val_seq distribution: Counter({np.int64(5): 48136, np.int64(6): 3203, np.int64
 - training:
     - loss=focal_loss(gamma=2.0, alpha=0.25)
     - class_weights by median frequence
-    - shuffle=False
     - batch_size=64
 
 ```

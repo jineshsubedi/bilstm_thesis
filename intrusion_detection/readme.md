@@ -288,3 +288,127 @@ injection 0.005001 0.002692
  scanning 0.004000 0.001227
       xss 0.025004 0.001227
 ```
+
+# 2nd Level Optimized Model - Improvements 1
+## features
+-   MODEL
+    -   Bidirectional(LSTM = 128, return_sequences=True, recurrent_dropout=0.1,recurrent_activation='sigmoid',activation='tanh',kernel_regularizer=l2(1e-4))
+    -   LayerNormalization
+    -   Dropout=0.3
+    -   Bidirectional(LSTM = 64, return_sequences=True, recurrent_dropout=0.1,recurrent_activation='sigmoid',activation='tanh',kernel_regularizer=l2(1e-4))
+    -   LayerNormalization
+    -   Dropout=0.3
+    -   Dense(64, activation='relu', kernel_regularizer=l2(1e-4))
+    -   Dropout=0.25
+    -   Dense(32, activation='relu')
+    -   Dropout=0.25
+    -   Dense(9, activation='softmax')
+
+-   ADYSN is Applied for minority class(mitm = 5000)
+-   loss=focal_loss(gamma=2.0, alpha=0.25)
+-   optimizer = Adam(learning_rate=CosineDecayRestarts(initial_learning_rate=1e-3, first_decay_steps=5), clipnorm=1.0)
+-   For Class Weight, Median based weight calculation
+-   GMeanMetric() is used
+-   DYnamic validation data split i.e validation_split=0.2 while mode.fit, as previously we split a validation data and we validate the same with every epochs.
+-   Batch=128, previously 64
+-   Timestamp or sequence window = 20, previously 10.
+
+## Report
+-   CLASSIFICATION REPORT
+```
+    precision    recall  f1-score   support
+
+           0       0.99      1.00      1.00      3997
+           1       0.92      0.98      0.95      3998
+           2       1.00      0.92      0.96      4000
+           3       0.95      0.98      0.97      3999
+           4       0.37      0.91      0.53       209
+           5       0.99      0.98      0.99     59991
+           6       0.95      1.00      0.97      3998
+           7       0.97      0.99      0.98      3999
+           8       0.97      0.98      0.98      3999
+
+    accuracy                           0.98     88190
+   macro avg       0.90      0.97      0.92     88190
+weighted avg       0.98      0.98      0.98     88190
+
+    Class      FNR      FPR
+ backdoor 0.000000 0.000297
+     ddos 0.017759 0.003813
+      dos 0.075250 0.000083
+injection 0.021505 0.002281
+     mitm 0.090909 0.003614
+   normal 0.019953 0.016313
+ password 0.004752 0.002637
+ scanning 0.007002 0.001425
+      xss 0.017504 0.001497
+```
+
+# 2nd Level Optimized Model - Improvements 2
+
+## Features
+-   same as nd Level Optimized Model - Improvements 1
+-   changes:
+    -   Manual Validation split i.e validation_data=(X_val_seq, y_val_seq)
+
+## Report
+-   CLASSIFICATION REPORT
+```
+    precision    recall  f1-score   support
+
+           0       0.99      1.00      1.00      3997
+           1       0.97      0.98      0.97      3998
+           2       1.00      0.92      0.96      4000
+           3       0.95      0.98      0.96      3999
+           4       0.36      0.92      0.51       209
+           5       0.99      0.98      0.99     59991
+           6       0.96      0.99      0.97      3998
+           7       0.97      0.99      0.98      3999
+           8       0.96      0.99      0.98      3999
+
+    accuracy                           0.98     88190
+   macro avg       0.91      0.97      0.92     88190
+weighted avg       0.98      0.98      0.98     88190
+
+    Class      FNR      FPR
+ backdoor 0.000000 0.000368
+     ddos 0.019510 0.001556
+      dos 0.075250 0.000083
+injection 0.024756 0.002411
+     mitm 0.076555 0.003955
+   normal 0.016502 0.015958
+ password 0.013757 0.002150
+ scanning 0.006002 0.001449
+      xss 0.013753 0.001722
+```
+
+# 2nd Level Optimize Model with multiclassGmean
+
+```
+precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00      3999
+           1       0.97      0.99      0.98      3999
+           2       0.96      0.96      0.96      4000
+           3       0.98      0.97      0.98      3999
+           4       0.43      0.95      0.59       209
+           5       1.00      0.99      0.99     59995
+           6       0.97      0.95      0.96      3999
+           7       0.98      1.00      0.99      4000
+           8       0.93      0.99      0.96      4000
+
+    accuracy                           0.98     88200
+   macro avg       0.91      0.98      0.93     88200
+weighted avg       0.99      0.98      0.99     88200
+
+    Class      FNR      FPR
+ backdoor 0.000000 0.000166
+     ddos 0.013503 0.001247
+      dos 0.035250 0.002043
+injection 0.025006 0.001033
+     mitm 0.047847 0.003034
+   normal 0.012668 0.008119
+ password 0.051763 0.001366
+ scanning 0.004500 0.000843
+      xss 0.012000 0.003302
+```
